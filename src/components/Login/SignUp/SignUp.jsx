@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import SweetAlert from "sweetalert-react/lib/SweetAlert";
+import { toast, ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../context/AuthProvider/AuthProvider";
 
 const SignUp = () => {
@@ -22,19 +22,11 @@ const SignUp = () => {
     .then((result) => {
       const user = result.user;
       console.log(user);
-      // SweetAlert("Good","User Created Successfully.", "success");
-      // const userInfo = {
-      //   displayName : data.name,
-      //   photoURL : data.image
-      // }
-      // updateUser(userInfo)
-      //     .then(() => {
-      //       const userData = {
-      //         userName : user.displayName,
-      //         image : user.photoURL
-      //       }
-      //       console.log(userData);
-      //     })
+      navigate('/')
+      toast.success("User created successfully!", {
+        position: "top-center"
+      })
+
     })
     .catch((error) => {
       console.log(error);
@@ -129,6 +121,7 @@ const SignUp = () => {
           </Link>
         </p>
       </div>
+      <ToastContainer />
     </div>
   );
 };

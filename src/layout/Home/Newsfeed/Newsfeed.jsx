@@ -3,12 +3,13 @@ import { HiPhoto } from "react-icons/hi2";
 import { RxCross2 } from "react-icons/rx";
 import { useQuery } from "@tanstack/react-query";
 import Post from "./Post/Post";
+import { toast } from "react-toastify";
 
 const Newsfeed = () => {
   const [image, setImage] = useState(null);
   const imageRef = useRef();
 
-  const {data: newsPost = []} = useQuery({
+  const {data: newsPost, refetch = []} = useQuery({
     queryKey: ['newPost'],
     queryFn: () => fetch('http://localhost:5000/posts')
     .then(res => res.json())
@@ -33,17 +34,39 @@ const Newsfeed = () => {
         .then((res) => res.json())
         .then((imgData) => {
           console.log(imgData.data.url);
+          setImage(imgData.data.url)
         });
-    }
-  };
+      }
+      };
 
   const handleShare = (e) => {
     e.preventDefault();
-    const imgUrl = onImageChange();
     const form = e.target;
-    // // const image = form.image.value;
     const status = form.status.value;
-    console.log(imgUrl);
+    console.log(image);
+    const newPost = {
+      image,
+      status
+    };
+
+    fetch('http://localhost:5000/posts', {
+      method: 'POST',
+      headers: {
+        "content-type" : "application/json"
+      },
+      body: JSON.stringify(newPost)
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      if(data.acknowledged){
+        toast.success("Post submitted", {
+          position: "top-center"
+        })
+        form.reset();
+        refetch();
+      }
+    })
   }
 
   return (
@@ -99,7 +122,6 @@ const Newsfeed = () => {
             post={post}
           ></Post>)
         }
-        
       </div>
       
     </div>

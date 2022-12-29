@@ -1,7 +1,17 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../context/AuthProvider/AuthProvider";
 
 const Navbar = () => {
+  const {user, logOut} = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogOut = () => {
+    logOut()
+      .then(() => {})
+      .catch((err) => console.log(err));
+      navigate('/')
+  };
 
     const navMenu = (
         <React.Fragment>
@@ -11,9 +21,17 @@ const Navbar = () => {
         <li className="font-bold">
             <Link>About</Link>
         </li>
+        {user?.uid ? (
+        <>
+          <li className="font-bold">
+            <Link onClick={handleLogOut}>Logout</Link>
+          </li>
+        </>
+      ) : (
         <li className="font-bold">
-            <Link to={'/login'}>Login</Link>
+          <Link to="/login">Login</Link>
         </li>
+      )}
         </React.Fragment>
     )
 
@@ -36,7 +54,7 @@ const Navbar = () => {
     </ul>
   </div>
   <div className="navbar-end">
-    <a className="btn">Get started</a>
+    {/* <a className="btn">Get started</a> */}
   </div>
 </div>
   );

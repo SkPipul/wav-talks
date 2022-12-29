@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
-import swal from "sweetalert";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { AuthContext } from "../../context/AuthProvider/AuthProvider";
 
 const Login = () => {
   const {
@@ -12,12 +13,38 @@ const Login = () => {
   } = useForm();
 
   const [loginError, setLoginError] = useState("");
+  const {signIn} = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogin = (data) => {
+    setLoginError("");
+    signIn(data.email, data.password)
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+        navigate('/')
+        toast.success("User loged in Successfully!", {
+          position: "top-center"
+        })
+      })
+  }
+
+  // const handleGoogle = () => {
+  //   signInWithGoogle()
+  //   .then(res => {
+  //       const user = res.user;
+  //       console.log(user);
+  //       const userData = {
+  //         userName: user.displayName,
+  //         email: user.email,
+  //         role: 'buyer'
+  //       }
 
   return (
     <div className="h-[800px] flex justify-center">
       <div className="w-96 p-7">
         <h2 className="text-4xl font-bold text-center">Login</h2>
-        <form>
+        <form onSubmit={handleSubmit(handleLogin)}>
           <div className="form-control w-full max-w-xs">
             <label className="label">
               {" "}

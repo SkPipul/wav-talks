@@ -117,6 +117,7 @@ const Newsfeed = () => {
 
       <div className="ml-20 my-6">
         {
+          newsPost &&
           newsPost.map( post => <Post
             key={post._id}
             post={post}

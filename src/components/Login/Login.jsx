@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthProvider/AuthProvider";
 
@@ -13,8 +13,10 @@ const Login = () => {
   } = useForm();
 
   const [loginError, setLoginError] = useState("");
-  const {signIn} = useContext(AuthContext);
+  const {signIn, signInWithGoogle, setLoading} = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   const handleLogin = (data) => {
     setLoginError("");
@@ -22,23 +24,23 @@ const Login = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
-        navigate('/')
+        navigate(from, {replace: true})
         toast.success("User loged in Successfully!", {
           position: "top-center"
         })
       })
   }
 
-  // const handleGoogle = () => {
-  //   signInWithGoogle()
-  //   .then(res => {
-  //       const user = res.user;
-  //       console.log(user);
-  //       const userData = {
-  //         userName: user.displayName,
-  //         email: user.email,
-  //         role: 'buyer'
-  //       }
+  const handleGoogle = () => {
+    signInWithGoogle()
+    .then(res => {
+        const user = res.user;
+        console.log(user);
+        setLoading(false)
+        navigate(from, {replace: true})
+    })
+    .catch(err => console.error(err))
+}
 
   return (
     <div className="h-[800px] flex justify-center">
@@ -102,7 +104,7 @@ const Login = () => {
         </p>
         <div className="divider">OR</div>
         <button className="btn btn-outline w-full">
-          <FcGoogle className="text-2xl mx-2"></FcGoogle> CONTINUE WITH GOOGLE
+          <FcGoogle onClick={handleGoogle} className="text-2xl mx-2"></FcGoogle> CONTINUE WITH GOOGLE
         </button>
       </div>
     </div>

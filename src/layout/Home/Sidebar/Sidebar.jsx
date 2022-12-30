@@ -3,7 +3,7 @@ import React from "react";
 
 const Sidebar = () => {
   return (
-    <div>
+    <div className="sticky top-0">
       <h2 className="text-3xl font-bold font-serif text-center mb-8">Our Followers</h2>
       <Carousel cols={1} rows={1} gap={10} loop>
       <Carousel.Item>

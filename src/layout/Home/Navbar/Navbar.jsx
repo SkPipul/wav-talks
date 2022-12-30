@@ -19,7 +19,7 @@ const Navbar = () => {
             <Link to={'/'}>Home</Link>
         </li>
         <li className="font-bold">
-            <Link>About</Link>
+            <Link to={'/about'}>About</Link>
         </li>
         {user?.uid ? (
         <>

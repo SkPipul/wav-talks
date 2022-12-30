@@ -10,12 +10,17 @@ const SignUp = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  // const imageHostKey = process.env.REACT_APP_imgbb_key;
 
-  const {createUser, updateUser} = useContext(AuthContext);
+  const {createUser, updateUser, setLoading} = useContext(AuthContext);
   const [signUpError, setSignUPError] = useState("");
+  // const [image, setImage] = useState(null)
   const navigate = useNavigate();
+  // const location = useLocation();
+  // const from = location.state?.from?.pathname || "/";
 
   const handleSignUp = (data) => {
+    setLoading(true)
     console.log(data);
     setSignUPError("");
     createUser(data.email, data.password)
@@ -26,6 +31,26 @@ const SignUp = () => {
       toast.success("User created successfully!", {
         position: "top-center"
       })
+      // const image = data.image[0];
+      // const formData = new FormData();
+      // formData.append('image', image);
+      // const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`
+      // fetch(url, {
+      //   method: 'POST',
+      //   body: formData
+      // })
+      // .then(res => res.json())
+      // .then( imageData => {
+      //   console.log(imageData.data.url);
+      //   setImage(imageData.data.url)
+      // })
+
+
+      const userInfo = {
+        displayName : data.name,
+        photoURL : data.image
+      }
+      updateUser(userInfo)
 
     })
     .catch((error) => {
@@ -58,13 +83,46 @@ const SignUp = () => {
           <div className="form-control w-full max-w-xs">
             <label className="label">
               {" "}
+              <span className="label-text">University</span>
+            </label>
+            <input
+              type="text"
+              {...register("university", {
+                required: "University is Required",
+              })}
+              className="input input-bordered w-full max-w-xs"
+            />
+            {errors.university && (
+              <p className="text-red-500">{errors.university.message}</p>
+            )}
+          </div>
+          <div className="form-control w-full max-w-xs">
+            <label className="label">
+              {" "}
+              <span className="label-text">Address</span>
+            </label>
+            <input
+              type="text"
+              {...register("address", {
+                required: "Address is Required",
+              })}
+              className="input input-bordered w-full max-w-xs"
+            />
+            {errors.address && (
+              <p className="text-red-500">{errors.address.message}</p>
+            )}
+          </div>
+          <div className="form-control w-full max-w-xs">
+            <label className="label">
+              {" "}
               <span className="label-text">Image</span>
             </label>
             <input
-              type="file"
+              type="text"
               {...register("image", {
                 required: "Image is Required",
               })}
+              placeholder = "Image URL"
               className="input input-bordered w-full max-w-xs"
             />
             {errors.image && (

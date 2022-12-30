@@ -1,17 +1,19 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { HiPhoto } from "react-icons/hi2";
 import { RxCross2 } from "react-icons/rx";
 import { useQuery } from "@tanstack/react-query";
 import Post from "./Post/Post";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../../context/AuthProvider/AuthProvider";
 
 const Newsfeed = () => {
   const [image, setImage] = useState(null);
   const imageRef = useRef();
+  const {user} = useContext(AuthContext);
 
   const {data: newsPost, refetch = []} = useQuery({
     queryKey: ['newPost'],
-    queryFn: () => fetch('http://localhost:5000/posts')
+    queryFn: () => fetch('https://wav-talks-server.vercel.app/posts')
     .then(res => res.json())
   })
 
@@ -49,7 +51,7 @@ const Newsfeed = () => {
       status
     };
 
-    fetch('http://localhost:5000/posts', {
+    fetch('https://wav-talks-server.vercel.app/posts', {
       method: 'POST',
       headers: {
         "content-type" : "application/json"
@@ -75,7 +77,7 @@ const Newsfeed = () => {
       <div className="flex items-center gap-3">
         <img
           className="w-[3.5rem] h-[3.5rem] rounded-[50%]"
-          src="https://images.unsplash.com/photo-1466112928291-0903b80a9466?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
+          src={user?.photoURL}
           alt=""
         />
         <input
